@@ -66,14 +66,18 @@ COPY trf /RepeatMasker/
 #Download and install repeat masker 
 RUN wget http://www.repeatmasker.org/RepeatMasker-open-4-0-7.tar.gz \
     && tar -xzf RepeatMasker-open*.tar.gz \
-	&& rm -f RepeatMasker-open*.tar.gz \
-	&& perl -0p -e 's/\/usr\/local\/hmmer/\/usr\/bin/g;' \
-	-e 's/\/usr\/local\/rmblast/\/ncbi-rmblastn-2.2.28\/bin/g;' \
-    -e 's/DEFAULT_SEARCH_ENGINE = "crossmatch"/DEFAULT_SEARCH_ENGINE = "ncbi"/g;' \
-    -e 's/TRF_PRGM = ""/TRF_PRGM = "\/RepeatMasker\/trf"/g;' RepeatMasker/RepeatMaskerConfig.tmpl > RepeatMasker/RepeatMaskerConfig.pm
+	&& rm -f RepeatMasker-open*.tar.gz #\
+#	&& perl -0p -e 's/\/usr\/local\/hmmer/\/usr\/bin/g;' \
+#	-e 's/\/usr\/local\/rmblast/\/ncbi-rmblastn-2.2.28\/bin/g;' \
+#    -e 's/DEFAULT_SEARCH_ENGINE = "crossmatch"/DEFAULT_SEARCH_ENGINE = "ncbi"/g;' \
+#    -e 's/TRF_PRGM = ""/TRF_PRGM = "\/RepeatMasker\/trf"/g;' RepeatMasker/RepeatMaskerConfig.tmpl > RepeatMasker/RepeatMaskerConfig.pm
 
 #Copy sequences for repeat masker
-COPY RMRBSeqs.embl /RepeatMasker/
+COPY RepBaseRepeatMaskerEdition-20170127 /RepeatMasker/
+
+#RepeatMaskerConfig.pm patch
+COPY RepeatMaskerConfig.pm /RepeatMasker/
+RUN chmod +x /RepeatMasker/RepeatMaskerConfig.pm
 
 #Download and instal mpich
 RUN wget http://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz \
@@ -94,3 +98,8 @@ RUN wget http://yandell.topaz.genetics.utah.edu/maker_downloads/EDD0/9498/2D2F/1
     && cd maker/src \
     && echo y| perl Build.PL \
     && ./Build install
+
+Run mkdir /home/projects
+
+Run mkdir /cifs
+
